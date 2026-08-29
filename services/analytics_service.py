@@ -25,6 +25,21 @@ class AnalyticsServiceRecord:
     metadata: dict[str, Any] = field(default_factory=dict)
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
+    @property
+    def identifier(self) -> str:
+        """Compatibility alias for the record key."""
+        return self.key
+
+    @property
+    def value(self) -> float:
+        """Compatibility alias for the record score."""
+        return self.score
+
+    @property
+    def labels(self) -> list[str]:
+        """Compatibility alias for record tags."""
+        return self.tags
+
     def normalized(self) -> dict[str, Any]:
         """Return a JSON-safe representation with stable field names."""
         value = asdict(self)
@@ -57,6 +72,26 @@ class AnalyticsService:
             metadata=dict(value.get("metadata", {}) or {}),
         )
 
+    def put(self, identifier: str, value: float, labels: Iterable[str] | None = None, **metadata: Any) -> AnalyticsServiceRecord:
+        """Create or replace a KPI-style analytics record.
+
+        This compatibility API accepts the simple ``identifier/value/labels``
+        shape used by clients and tests while preserving the service's
+        normalized record representation.
+        """
+        record = AnalyticsServiceRecord(
+            key=str(identifier).strip(),
+            score=float(value),
+            tags=list(labels or []),
+            metadata=dict(metadata),
+        )
+        if not record.key:
+            raise ValueError("identifier is required")
+        if not math.isfinite(record.score):
+            raise ValueError("value must be finite")
+        self._records[record.key] = record
+        return record
+
     def add(self, value: Mapping[str, Any] | AnalyticsServiceRecord) -> AnalyticsServiceRecord:
         record = self._coerce(value)
         if not record.key:
@@ -67,8 +102,13 @@ class AnalyticsService:
     def get(self, key: str) -> AnalyticsServiceRecord | None:
         return self._records.get(str(key).strip())
 
+
     def remove(self, key: str) -> bool:
         return self._records.pop(str(key).strip(), None) is not None
+
+    def delete(self, identifier: str) -> bool:
+        """Delete a record by its public identifier."""
+        return self.remove(identifier)
 
     def update_status(self, key: str, status: str) -> AnalyticsServiceRecord:
         record = self._require(key)
