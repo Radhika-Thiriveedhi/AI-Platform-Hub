@@ -1,0 +1,12 @@
+{
+  "name": "ai-platform-hub-frontend",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Frontend assets and developer scripts for AI Platform Hub",
+  "scripts": {
+    "start": "python run.py",
+    "build": "python -m compileall -q .",
+    "test": "python -m pytest",
+    "lint": "python -m compileall -q ."
+  }
+}
