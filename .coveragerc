@@ -1,0 +1,18 @@
+[run]
+branch = True
+source =
+    app
+    modules
+    data
+    utils
+    services
+omit =
+    tests/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.
+    raise NotImplementedError
+show_missing = True
+skip_covered = False
