@@ -154,7 +154,8 @@ def chat_interface():
 @chat_bp.route("/send", methods=["POST"])
 def chat_send():
     """Handle chat message submission (AJAX or form)."""
-    message = request.form.get("message") or (request.json or {}).get("message", "")
+    payload = request.get_json(silent=True) or {}
+    message = request.form.get("message") or payload.get("message", "")
     if not message:
         return jsonify({"error": "Empty message"}), 400
     response = process_chat_message(message)
