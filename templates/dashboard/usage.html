@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Usage Analytics – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Detailed Usage Analytics</h1>
+    <a href="{{ url_for('dashboard.dashboard_home') }}" class="btn btn-ghost btn-sm">← Back to Dashboard</a>
+    <div class="card mt-md">
+        <table class="data-table">
+            <thead>
+                <tr><th>Date</th><th>API Calls</th><th>Active Users</th><th>Images</th><th>Chat Msgs</th><th>Avg Latency</th><th>Error Rate</th></tr>
+            </thead>
+            <tbody>
+            {% for t in trends %}
+            <tr>
+                <td>{{ t.date }}</td>
+                <td>{{ "{:,}".format(t.api_calls) }}</td>
+                <td>{{ "{:,}".format(t.active_users) }}</td>
+                <td>{{ "{:,}".format(t.images) }}</td>
+                <td>{{ "{:,}".format(t.chat_messages) }}</td>
+                <td>{{ t.avg_latency }}ms</td>
+                <td>{{ t.error_rate }}%</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+{% endblock %}

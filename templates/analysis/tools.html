@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Text Analysis Tools – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Text Analysis Tools</h1>
+    <p class="page-subtitle">Analyze text for sentiment, entities, keywords, readability, toxicity, and more.</p>
+    
+    <div class="analysis-layout">
+        <div class="analysis-main">
+            <form id="analysisForm">
+                <label for="text">Text to Analyze</label>
+                <textarea id="text" name="text" rows="8" class="input" placeholder="Paste or type your text here..." required></textarea>
+                
+                <label>Analysis Type</label>
+                <div class="type-grid">
+                    {% for t in analysis_types %}
+                    <label class="type-option">
+                        <input type="radio" name="type" value="{{ t.id }}" {% if loop.first %}checked{% endif %}>
+                        <span class="type-icon">{{ t.icon }}</span>
+                        <span class="type-name">{{ t.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg">Run Analysis</button>
+            </form>
+            
+            <div id="analysisResult" class="result-area hidden">
+                <h3>Analysis Result</h3>
+                <pre id="resultJson" class="result-json"></pre>
+            </div>
+        </div>
+        <aside>
+            <div class="info-card">
+                <h3>Available Analyses</h3>
+                <ul>
+                    {% for t in analysis_types %}
+                    <li><strong>{{ t.icon }} {{ t.name }}</strong><br><small>{{ t.description }}</small></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const resultArea = document.getElementById('analysisResult');
+    const resultJson = document.getElementById('resultJson');
+    resultArea.classList.remove('hidden');
+    resultJson.textContent = 'Analyzing...';
+    
+    try {
+        const res = await fetch('{{ url_for("analysis.analysis_run") }}', { method: 'POST', body: formData });
+        const data = await res.json();
+        resultJson.textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        resultJson.textContent = 'Request failed.';
+    }
+});
+</script>
+{% endblock %}

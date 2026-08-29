@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Careers – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container narrow">
+    <h1 class="page-title">Careers</h1>
+    <p>We are always looking for talented people who are passionate about AI and developer tools. Open roles would be listed here. Send your resume via the contact form.</p>
+    <a href="{{ url_for('main.home') }}" class="btn btn-outline">Back to Home</a>
+</div>
+</section>
+{% endblock %}

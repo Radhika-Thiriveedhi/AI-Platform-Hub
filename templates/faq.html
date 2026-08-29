@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}FAQ – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container narrow">
+    <h1 class="page-title">Frequently Asked Questions</h1>
+    <div class="faq-list">
+        {% for faq in faqs %}
+        <details class="faq-item">
+            <summary>{{ faq.question }}</summary>
+            <p>{{ faq.answer }}</p>
+        </details>
+        {% endfor %}
+    </div>
+</div>
+</section>
+{% endblock %}

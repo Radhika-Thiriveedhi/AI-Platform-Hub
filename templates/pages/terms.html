@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container narrow">
+    <h1 class="page-title">Terms of Service</h1>
+    <p>This is a mock terms of service page. It would normally outline acceptable use, account responsibilities, intellectual property, liability limitations, and governing law.</p>
+    <a href="{{ url_for('main.home') }}" class="btn btn-outline">Back to Home</a>
+</div>
+</section>
+{% endblock %}

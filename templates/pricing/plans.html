@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Pricing – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title text-center">Simple, Transparent Pricing</h1>
+    <p class="page-subtitle text-center">Start free. Scale as you grow. No hidden fees.</p>
+    
+    <div class="pricing-grid">
+        {% for plan in plans %}
+        <div class="pricing-card {% if plan.highlighted %}highlighted{% endif %}">
+            {% if plan.badge %}<span class="plan-badge">{{ plan.badge }}</span>{% endif %}
+            <h2>{{ plan.name }}</h2>
+            <p class="plan-tagline">{{ plan.tagline }}</p>
+            <div class="plan-price">
+                {% if plan.price_monthly is none %}
+                <span class="price">Custom</span>
+                {% elif plan.price_monthly == 0 %}
+                <span class="price">$0</span>
+                <span class="period">/ forever</span>
+                {% else %}
+                <span class="price">${{ plan.price_monthly }}</span>
+                <span class="period">/ month</span>
+                {% endif %}
+            </div>
+            <ul class="plan-features">
+                {% for f in plan.features %}
+                <li>✓ {{ f }}</li>
+                {% endfor %}
+            </ul>
+            <a href="{{ plan.cta_url }}" class="btn {% if plan.highlighted %}btn-primary{% else %}btn-outline{% endif %} btn-block">{{ plan.cta }}</a>
+            <a href="{{ url_for('pricing.pricing_detail', plan_id=plan.id) }}" class="plan-details-link">View full details →</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</section>
+{% endblock %}

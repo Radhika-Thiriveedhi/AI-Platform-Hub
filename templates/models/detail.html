@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{{ model.display_name }} – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <nav class="breadcrumb">
+        <a href="{{ url_for('models.models_list') }}">Models</a> / {{ model.display_name }}
+    </nav>
+    <div class="detail-header">
+        <div>
+            <span class="model-provider">{{ model.provider }}</span>
+            <h1>{{ model.display_name }}</h1>
+            <p class="model-category">{{ model.category }} · v{{ model.version }}</p>
+            <div class="model-rating-large">★ {{ model.rating }} <small>({{ model.reviews_count }} reviews)</small></div>
+        </div>
+        <div class="detail-actions">
+            <a href="{{ url_for('chat.chat_interface') }}" class="btn btn-primary">Try in Chat</a>
+            <a href="{{ url_for('docs.docs_index') }}" class="btn btn-outline">API Docs</a>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-main">
+            <h2>Description</h2>
+            <p>{{ model.description }}</p>
+            <div class="long-desc">{{ model.long_description | replace('\n', '<br>') | safe }}</div>
+
+            <h2>Benchmarks</h2>
+            <div class="benchmarks">
+                {% for name, score in model.benchmarks.items() %}
+                <div class="benchmark-item">
+                    <span class="bench-name">{{ name | upper }}</span>
+                    <div class="bench-bar"><div class="bench-fill" style="width:{{ score }}%"></div></div>
+                    <span class="bench-score">{{ score }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2>Features</h2>
+            <ul class="feature-list">
+                {% for f in model.features %}
+                <li>{{ f }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <aside class="detail-sidebar">
+            <div class="info-card">
+                <h3>Specifications</h3>
+                <dl>
+                    <dt>Parameters</dt><dd>{{ model.parameters }}</dd>
+                    <dt>Context Length</dt><dd>{{ model.context_length }} tokens</dd>
+                    <dt>Max Output</dt><dd>{{ model.max_output_tokens }} tokens</dd>
+                    <dt>Latency</dt><dd>~{{ model.latency_ms }} ms</dd>
+                    <dt>Throughput</dt><dd>{{ model.throughput_tps }} t/s</dd>
+                    <dt>Price</dt><dd>${{ "%.5f"|format(model.price_per_1k_tokens) }} / 1K tokens</dd>
+                    <dt>Release</dt><dd>{{ model.release_date }}</dd>
+                    <dt>Open Source</dt><dd>{{ "Yes" if model.is_open_source else "No" }}</dd>
+                </dl>
+            </div>
+            <div class="info-card">
+                <h3>Tags</h3>
+                <div class="model-tags">
+                    {% for tag in model.tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    {% if related %}
+    <h2 class="mt-lg">Related Models</h2>
+    <div class="models-grid">
+        {% for m in related %}
+        <div class="model-card">
+            <h3><a href="{{ url_for('models.model_detail', model_id=m.id) }}">{{ m.display_name }}</a></h3>
+            <p class="model-category">{{ m.category }}</p>
+            <a href="{{ url_for('models.model_detail', model_id=m.id) }}" class="btn btn-sm btn-outline">View</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

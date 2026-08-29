@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Chat Interface – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section chat-section">
+<div class="container">
+    <h1 class="page-title">AI Chat Interface</h1>
+    <p class="page-subtitle">Talk to the platform assistant. Ask about models, pricing, features, or anything AI-related.</p>
+    
+    <div class="chat-layout">
+        <div class="chat-main">
+            <div class="chat-messages" id="chatMessages">
+                {% if history %}
+                    {% for msg in history %}
+                    <div class="chat-bubble {{ msg.role }}">
+                        <div class="bubble-role">{{ "You" if msg.role == "user" else "Assistant" }}</div>
+                        <div class="bubble-content">{{ msg.content }}</div>
+                        <div class="bubble-time">{{ msg.timestamp[:19] }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="chat-welcome">
+                        <h3>Start a conversation</h3>
+                        <p>Try one of these prompts:</p>
+                        <div class="suggested-prompts" id="suggestedPrompts">
+                            <button class="prompt-chip" data-prompt="What are the best models for code generation?">Best models for code</button>
+                            <button class="prompt-chip" data-prompt="Explain the difference between Free and Pro plans">Free vs Pro plans</button>
+                            <button class="prompt-chip" data-prompt="How do I generate an image?">How to generate images</button>
+                            <button class="prompt-chip" data-prompt="Show me top-rated large language models">Top LLMs</button>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <form class="chat-input-form" id="chatForm">
+                <input type="text" id="chatInput" name="message" placeholder="Type your message..." class="input chat-input" autocomplete="off" required>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+            <form method="post" action="{{ url_for('chat.chat_clear') }}" class="clear-form">
+                <button type="submit" class="btn btn-ghost btn-sm">Clear History</button>
+            </form>
+        </div>
+        <aside class="chat-sidebar">
+            <div class="info-card">
+                <h3>About this Chat</h3>
+                <p>This is a mock conversational interface powered by simple intent detection. In production it would connect to real LLMs via the platform API.</p>
+            </div>
+            <div class="info-card">
+                <h3>Tips</h3>
+                <ul>
+                    <li>Ask about models and categories</li>
+                    <li>Inquire about pricing plans</li>
+                    <li>Request help with image generation</li>
+                    <li>Get navigation guidance</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('chatForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    const messagesEl = document.getElementById('chatMessages');
+    // Remove welcome if present
+    const welcome = messagesEl.querySelector('.chat-welcome');
+    if (welcome) welcome.remove();
+    
+    // Add user bubble
+    messagesEl.insertAdjacentHTML('beforeend', `
+        <div class="chat-bubble user">
+            <div class="bubble-role">You</div>
+            <div class="bubble-content">${escapeHtml(message)}</div>
+        </div>
+    `);
+    input.value = '';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    
+    try {
+        const formData = new FormData();
+        formData.append('message', message);
+        const res = await fetch('{{ url_for("chat.chat_send") }}', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.response) {
+            messagesEl.insertAdjacentHTML('beforeend', `
+                <div class="chat-bubble assistant">
+                    <div class="bubble-role">Assistant</div>
+                    <div class="bubble-content">${escapeHtml(data.response)}</div>
+                </div>
+            `);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+document.querySelectorAll('.prompt-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('chatInput').value = btn.dataset.prompt;
+        document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+    });
+});
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+{% endblock %}

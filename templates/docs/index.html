@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Documentation – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Documentation</h1>
+    <p class="page-subtitle">Everything you need to integrate and build with AI Platform Hub.</p>
+    <div class="docs-grid">
+        {% for section in sections %}
+        <div class="docs-section-card">
+            <h2>{{ section.title }}</h2>
+            <ul>
+                {% for page in section.pages %}
+                <li><a href="{{ url_for('docs.docs_page', section=section.id, page=page.id) }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</section>
+{% endblock %}

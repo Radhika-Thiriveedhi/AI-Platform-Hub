@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ content.title }} – Docs – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container docs-layout">
+    <aside class="docs-sidebar">
+        {% for section in sections %}
+        <div class="docs-nav-section">
+            <h4>{{ section.title }}</h4>
+            <ul>
+                {% for page in section.pages %}
+                <li><a href="{{ url_for('docs.docs_page', section=section.id, page=page.id) }}" class="{% if section.id == current_section and page.id == content.page_id %}active{% endif %}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </aside>
+    <article class="docs-content">
+        <nav class="breadcrumb">
+            <a href="{{ url_for('docs.docs_index') }}">Docs</a> / {{ content.section_title }} / {{ content.title }}
+        </nav>
+        <div class="docs-body">
+            {{ content.content | replace('\n', '<br>') | safe }}
+        </div>
+        <p class="muted">Last updated: {{ content.last_updated }}</p>
+    </article>
+</div>
+</section>
+{% endblock %}

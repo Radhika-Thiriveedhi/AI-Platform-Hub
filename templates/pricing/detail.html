@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ plan.name }} Plan – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <nav class="breadcrumb"><a href="{{ url_for('pricing.pricing_plans') }}">Pricing</a> / {{ plan.name }}</nav>
+    <h1>{{ plan.name }} Plan</h1>
+    <p class="page-subtitle">{{ plan.tagline }}</p>
+    <div class="detail-grid">
+        <div>
+            <h2>Features Included</h2>
+            <ul class="feature-list">
+                {% for f in plan.features %}<li>{{ f }}</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="info-card">
+            <h3>Limits</h3>
+            <dl>
+                {% for k, v in plan.limits.items() %}
+                <dt>{{ k | replace('_', ' ') | title }}</dt><dd>{{ v }}</dd>
+                {% endfor %}
+            </dl>
+            <a href="{{ plan.cta_url }}" class="btn btn-primary btn-block">{{ plan.cta }}</a>
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

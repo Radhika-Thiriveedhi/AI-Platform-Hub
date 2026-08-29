@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{{ app_name }} – Unified AI Platform{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-content">
+        <h1>Build with the Best AI Models</h1>
+        <p class="hero-subtitle">
+            Access 200+ models for language, vision, speech, and more.
+            One platform. Transparent pricing. Powerful APIs.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('models.models_list') }}" class="btn btn-primary btn-lg">Explore Models</a>
+            <a href="{{ url_for('chat.chat_interface') }}" class="btn btn-outline btn-lg">Try Chat</a>
+            <a href="{{ url_for('docs.docs_index') }}" class="btn btn-ghost btn-lg">Read Docs</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-value">{{ stats.total_models }}+</span>
+                <span class="stat-label">AI Models</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">{{ "{:,}".format(stats.active_users) }}</span>
+                <span class="stat-label">Active Users</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">{{ stats.uptime_percent }}%</span>
+                <span class="stat-label">Uptime</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">{{ "{:,}".format(stats.api_calls_today) }}</span>
+                <span class="stat-label">API Calls Today</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section features-section">
+    <div class="container">
+        <h2 class="section-title">Everything You Need to Build with AI</h2>
+        <p class="section-subtitle">From experimentation to production — one platform for all your AI needs.</p>
+        <div class="features-grid">
+            {% for feature in features %}
+            <a href="{{ feature.link }}" class="feature-card">
+                <div class="feature-icon">{{ feature.icon }}</div>
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.description }}</p>
+                <span class="feature-link">Learn more →</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section models-preview">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Models</h2>
+            <a href="{{ url_for('models.models_list') }}" class="btn btn-outline">View All Models</a>
+        </div>
+        <div class="models-grid">
+            {% for model in featured_models %}
+            <div class="model-card">
+                <div class="model-card-header">
+                    <span class="model-provider">{{ model.provider }}</span>
+                    <span class="model-rating">★ {{ model.rating }}</span>
+                </div>
+                <h3><a href="{{ url_for('models.model_detail', model_id=model.id) }}">{{ model.display_name }}</a></h3>
+                <p class="model-category">{{ model.category }}</p>
+                <p class="model-desc">{{ model.description[:140] }}...</p>
+                <div class="model-meta">
+                    <span>{{ model.parameters }}</span>
+                    <span>{{ model.context_length }} ctx</span>
+                    <span>${{ model.price_per_1k_tokens }}/1K</span>
+                </div>
+                <a href="{{ url_for('models.model_detail', model_id=model.id) }}" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section testimonials-section">
+    <div class="container">
+        <h2 class="section-title">Trusted by Builders</h2>
+        <div class="testimonials-grid">
+            {% for t in testimonials %}
+            <div class="testimonial-card">
+                <p class="quote">"{{ t.quote }}"</p>
+                <div class="testimonial-author">
+                    <div class="avatar" style="background:{{ t.avatar_color }}">{{ t.name[0] }}</div>
+                    <div>
+                        <strong>{{ t.name }}</strong>
+                        <span>{{ t.role }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section cta-section">
+    <div class="container cta-content">
+        <h2>Ready to Build with AI?</h2>
+        <p>Start free. Upgrade when you need more power. No credit card required.</p>
+        <div class="cta-actions">
+            <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+            <a href="{{ url_for('pricing.pricing_plans') }}" class="btn btn-outline btn-lg">View Pricing</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

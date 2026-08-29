@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} – Blog – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container narrow">
+    <nav class="breadcrumb"><a href="{{ url_for('blog.blog_list') }}">Blog</a> / {{ post.title }}</nav>
+    <article class="blog-post">
+        <span class="blog-category">{{ post.category }}</span>
+        <h1>{{ post.title }}</h1>
+        <div class="blog-meta">
+            <span>{{ post.author }}</span>
+            <span>{{ post.published_at }}</span>
+            <span>{{ post.read_time_minutes }} min read</span>
+        </div>
+        <div class="blog-body">
+            {{ post.content | replace('\n', '<br>') | safe }}
+        </div>
+    </article>
+</div>
+</section>
+{% endblock %}

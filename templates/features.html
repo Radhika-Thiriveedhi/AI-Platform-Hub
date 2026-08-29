@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Features – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Platform Features</h1>
+    <p class="page-subtitle">Everything you need to experiment, build, and scale with AI.</p>
+    <div class="features-grid large">
+        {% for feature in features %}
+        <div class="feature-card">
+            <div class="feature-icon">{{ feature.icon }}</div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+            <a href="{{ feature.link }}" class="btn btn-outline btn-sm">Explore</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</section>
+{% endblock %}

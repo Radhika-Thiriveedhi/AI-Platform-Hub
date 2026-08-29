@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Image Generation Studio – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Image Generation Studio</h1>
+    <p class="page-subtitle">Describe what you want to see. Choose a style. Generate (mock) images instantly.</p>
+    
+    <div class="studio-layout">
+        <div class="studio-main">
+            <form id="imageForm" class="studio-form">
+                <label for="prompt">Prompt</label>
+                <textarea id="prompt" name="prompt" rows="4" class="input" placeholder="A serene mountain landscape at sunrise with misty valleys..." required></textarea>
+                
+                <label>Style</label>
+                <div class="style-grid">
+                    {% for style in styles %}
+                    <label class="style-option">
+                        <input type="radio" name="style" value="{{ style.id }}" {% if loop.first %}checked{% endif %}>
+                        <span class="style-swatch" style="background:{{ style.preview_color }}"></span>
+                        <span class="style-name">{{ style.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg">Generate Image</button>
+            </form>
+            
+            <div id="resultArea" class="result-area hidden">
+                <h3>Generation Result</h3>
+                <div id="resultContent"></div>
+            </div>
+        </div>
+        <aside class="studio-sidebar">
+            <div class="info-card">
+                <h3>Recent Generations</h3>
+                {% if recent %}
+                <ul class="recent-list">
+                    {% for r in recent %}
+                    <li>
+                        <strong>{{ r.prompt }}</strong>
+                        <span>{{ r.style }} · {{ r.created_at[:10] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="muted">No generations yet. Create your first image!</p>
+                {% endif %}
+            </div>
+            <div class="info-card">
+                <h3>Prompt Tips</h3>
+                <ul>
+                    <li>Be specific about subject, setting, and mood</li>
+                    <li>Mention lighting, camera angle, or art medium</li>
+                    <li>Add quality modifiers like "highly detailed"</li>
+                    <li>Experiment with different styles</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('imageForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const resultArea = document.getElementById('resultArea');
+    const resultContent = document.getElementById('resultContent');
+    resultArea.classList.remove('hidden');
+    resultContent.innerHTML = '<p class="loading">Generating...</p>';
+    
+    try {
+        const res = await fetch('{{ url_for("image.image_generate") }}', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.status === 'success') {
+            resultContent.innerHTML = `
+                <div class="gen-result">
+                    <p><strong>Prompt:</strong> ${escapeHtml(data.prompt)}</p>
+                    <p><strong>Style:</strong> ${escapeHtml(data.style_name)}</p>
+                    <p><strong>Enhanced:</strong> ${escapeHtml(data.enhanced_prompt)}</p>
+                    <p><strong>Seed:</strong> ${data.seed} · <strong>Size:</strong> ${data.width}×${data.height}</p>
+                    <div class="placeholder-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 280px; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem;">
+                        [ Mock Image Placeholder ]<br>ID: ${data.generation_id}
+                    </div>
+                    <p class="success-msg">${escapeHtml(data.message)}</p>
+                    <p class="muted">Estimated cost: $${data.estimated_cost}</p>
+                </div>
+            `;
+        } else {
+            resultContent.innerHTML = `<p class="error">${escapeHtml(data.error || 'Generation failed')}</p>`;
+        }
+    } catch (err) {
+        resultContent.innerHTML = '<p class="error">Request failed. Please try again.</p>';
+    }
+});
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+{% endblock %}

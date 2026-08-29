@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Analytics Dashboard – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">Analytics Dashboard</h1>
+    <p class="page-subtitle">Overview of platform usage, performance, and top models.</p>
+    
+    <div class="stats-grid">
+        <div class="stat-card"><span class="stat-value">{{ "{:,}".format(stats.active_users) }}</span><span class="stat-label">Active Users</span></div>
+        <div class="stat-card"><span class="stat-value">{{ "{:,}".format(stats.api_calls_today) }}</span><span class="stat-label">API Calls Today</span></div>
+        <div class="stat-card"><span class="stat-value">{{ "{:,}".format(stats.api_calls_month) }}</span><span class="stat-label">API Calls (Month)</span></div>
+        <div class="stat-card"><span class="stat-value">{{ stats.uptime_percent }}%</span><span class="stat-label">Uptime</span></div>
+        <div class="stat-card"><span class="stat-value">{{ stats.avg_latency_ms }}ms</span><span class="stat-label">Avg Latency</span></div>
+        <div class="stat-card"><span class="stat-value">{{ "{:,}".format(stats.images_generated) }}</span><span class="stat-label">Images Generated</span></div>
+        <div class="stat-card"><span class="stat-value">{{ stats.gpu_utilization }}%</span><span class="stat-label">GPU Utilization</span></div>
+        <div class="stat-card"><span class="stat-value">${{ "{:,.0f}".format(stats.revenue_mtd) }}</span><span class="stat-label">Revenue MTD</span></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Top Models by Usage</h3>
+            <table class="data-table">
+                <thead><tr><th>#</th><th>Model</th><th>Requests</th><th>Success</th><th>Latency</th></tr></thead>
+                <tbody>
+                {% for m in top_models %}
+                <tr>
+                    <td>{{ m.rank }}</td>
+                    <td>{{ m.name }} <small class="muted">({{ m.category }})</small></td>
+                    <td>{{ "{:,}".format(m.requests) }}</td>
+                    <td>{{ m.success_rate }}%</td>
+                    <td>{{ m.avg_latency_ms }}ms</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h3>Usage Trend (Last 7 Days)</h3>
+            <table class="data-table">
+                <thead><tr><th>Date</th><th>API Calls</th><th>Users</th><th>Images</th><th>Error %</th></tr></thead>
+                <tbody>
+                {% for t in trends[-7:] %}
+                <tr>
+                    <td>{{ t.date }}</td>
+                    <td>{{ "{:,}".format(t.api_calls) }}</td>
+                    <td>{{ "{:,}".format(t.active_users) }}</td>
+                    <td>{{ "{:,}".format(t.images) }}</td>
+                    <td>{{ t.error_rate }}%</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('dashboard.dashboard_usage') }}" class="btn btn-outline btn-sm mt-md">Full Usage Report</a>
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

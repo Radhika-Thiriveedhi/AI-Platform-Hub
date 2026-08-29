@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}AI Models Catalog – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1 class="page-title">AI Models Catalog</h1>
+    <p class="page-subtitle">Browse {{ total }} models across multiple categories. Filter, search, and compare.</p>
+    
+    <div class="filters-bar">
+        <form method="get" class="search-form">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search models..." class="input">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="category-filters">
+            <a href="{{ url_for('models.models_list') }}" class="chip {% if current_category == 'all' %}active{% endif %}">All</a>
+            {% for cat in categories %}
+            <a href="{{ url_for('models.models_list', category=cat) }}" class="chip {% if current_category == cat %}active{% endif %}">{{ cat }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="models-grid">
+        {% for model in models %}
+        <div class="model-card">
+            <div class="model-card-header">
+                <span class="model-provider">{{ model.provider }}</span>
+                <span class="model-rating">★ {{ model.rating }}</span>
+            </div>
+            <h3><a href="{{ url_for('models.model_detail', model_id=model.id) }}">{{ model.display_name }}</a></h3>
+            <p class="model-category">{{ model.category }}</p>
+            <p class="model-desc">{{ model.description[:150] }}...</p>
+            <div class="model-meta">
+                <span title="Parameters">{{ model.parameters }}</span>
+                <span title="Context">{{ model.context_length }} tok</span>
+                <span title="Price">${{ "%.5f"|format(model.price_per_1k_tokens) }}/1K</span>
+            </div>
+            <div class="model-tags">
+                {% for tag in model.tags[:4] %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('models.model_detail', model_id=model.id) }}" class="btn btn-sm btn-primary">Details</a>
+        </div>
+        {% else %}
+        <p class="empty-state">No models found matching your criteria.</p>
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="?page={{ page-1 }}&category={{ current_category }}&q={{ query }}" class="btn btn-outline">Previous</a>
+        {% endif %}
+        <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="?page={{ page+1 }}&category={{ current_category }}&q={{ query }}" class="btn btn-outline">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

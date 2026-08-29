@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Compare Models – {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section">
+<div class="container">
+    <h1>Compare Models</h1>
+    {% if models %}
+    <div class="compare-table-wrap">
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    {% for m in models %}<th>{{ m.display_name }}</th>{% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Provider</td>{% for m in models %}<td>{{ m.provider }}</td>{% endfor %}</tr>
+                <tr><td>Category</td>{% for m in models %}<td>{{ m.category }}</td>{% endfor %}</tr>
+                <tr><td>Parameters</td>{% for m in models %}<td>{{ m.parameters }}</td>{% endfor %}</tr>
+                <tr><td>Context</td>{% for m in models %}<td>{{ m.context_length }}</td>{% endfor %}</tr>
+                <tr><td>Price / 1K</td>{% for m in models %}<td>${{ "%.5f"|format(m.price_per_1k_tokens) }}</td>{% endfor %}</tr>
+                <tr><td>Rating</td>{% for m in models %}<td>★ {{ m.rating }}</td>{% endfor %}</tr>
+                <tr><td>Latency</td>{% for m in models %}<td>{{ m.latency_ms }} ms</td>{% endfor %}</tr>
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Select models to compare from the catalog.</p>
+    <a href="{{ url_for('models.models_list') }}" class="btn btn-primary">Browse Models</a>
+    {% endif %}
+</div>
+</section>
+{% endblock %}
