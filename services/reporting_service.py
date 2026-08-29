@@ -1,563 +1,619 @@
-"""Reporting service layer.
-
-Provides validated domain operations, deterministic transformations, and
-small composable policies for the AI Platform Hub application.
-"""
+"""Reporting and analytics helpers for platform operations."""
 from __future__ import annotations
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Iterable, Mapping
-import hashlib
-import json
-import statistics
+import math
 
-@dataclass(slots=True)
-class ReportingServiceItem:
-    identifier: str
-    value: Any = None
-    labels: set[str] = field(default_factory=set)
-    attributes: dict[str, Any] = field(default_factory=dict)
-    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-
-    def to_dict(self) -> dict[str, Any]:
-        return {**asdict(self), "labels": sorted(self.labels)}
+@dataclass
+class ReportSection:
+    title: str
+    values: dict[str, Any] = field(default_factory=dict)
 
 class ReportingService:
-    """Coordinate reporting state and policies."""
-    def __init__(self):
-        self.items: dict[str, ReportingServiceItem] = {}
+    """Build deterministic summaries for dashboards and API responses."""
+    def __init__(self) -> None:
+        self.created_at = datetime.now(timezone.utc).isoformat()
 
-    def put(self, identifier: str, value: Any = None, labels: Iterable[str] = (), **attributes: Any):
-        key = str(identifier).strip()
-        if not key: raise ValueError("identifier is required")
-        item = ReportingServiceItem(key, value, {str(x).strip().lower() for x in labels if str(x).strip()}, dict(attributes))
-        self.items[key] = item
-        return item
+    def _numbers(self, values: Iterable[Any]) -> list[float]:
+        return [float(v) for v in values if isinstance(v, (int, float)) and math.isfinite(float(v))]
 
-    def get(self, identifier: str):
-        return self.items.get(str(identifier).strip())
+    def _section(self, title: str, values: Mapping[str, Any]) -> dict[str, Any]:
+        return ReportSection(title, dict(values)).__dict__
 
-    def delete(self, identifier: str) -> bool:
-        return self.items.pop(str(identifier).strip(), None) is not None
+    def metric_01(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 01 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_01", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-    def list(self):
-        return sorted(self.items.values(), key=lambda x: x.identifier)
+    def metric_02(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 02 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_02", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-    def values(self):
-        return [item.value for item in self.list()]
+    def metric_03(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 03 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_03", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-    def digest(self) -> str:
-        payload = json.dumps([x.to_dict() for x in self.list()], default=str, sort_keys=True)
-        return hashlib.sha256(payload.encode()).hexdigest()
+    def metric_04(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 04 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_04", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
+    def metric_05(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 05 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_05", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_01(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 1 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_01"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_06(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 06 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_06", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_02(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 2 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_02"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_07(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 07 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_07", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_03(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 3 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_03"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_08(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 08 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_08", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_04(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 4 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_04"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_09(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 09 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_09", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_05(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 5 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_05"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_10(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 10 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_10", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_06(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 6 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_06"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_11(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 11 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_11", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_07(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 7 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_07"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_12(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 12 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_12", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_08(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 8 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_08"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_13(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 13 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_13", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_09(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 9 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_09"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_14(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 14 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_14", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_10(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 10 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_10"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_15(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 15 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_15", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_11(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 11 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_11"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_16(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 16 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_16", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_12(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 12 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_12"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_17(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 17 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_17", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_13(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 13 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_13"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_18(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 18 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_18", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_14(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 14 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_14"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_19(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 19 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_19", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_15(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 15 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_15"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_20(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 20 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_20", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_16(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 16 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_16"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_21(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 21 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_21", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_17(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 17 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_17"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_22(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 22 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_22", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_18(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 18 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_18"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_23(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 23 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_23", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_19(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 19 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_19"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def metric_24(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Calculate metric 24 with stable empty-input behavior."""
+        nums = self._numbers(values)
+        total = sum(nums)
+        count = len(nums)
+        average = total / count if count else 0.0
+        minimum = min(nums) if nums else 0.0
+        maximum = max(nums) if nums else 0.0
+        spread = maximum - minimum if nums else 0.0
+        return self._section("metric_24", {
+            "count": count, "total": total, "average": average,
+            "minimum": minimum, "maximum": maximum, "spread": spread,
+        })
 
-def reporting_operation_20(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 20 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_20"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_01(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 01."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_01", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_21(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 21 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_21"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_02(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 02."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_02", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_22(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 22 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_22"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_03(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 03."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_03", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_23(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 23 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_23"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_04(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 04."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_04", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_24(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 24 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_24"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_05(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 05."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_05", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_25(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 25 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_25"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_06(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 06."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_06", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_26(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 26 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_26"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_07(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 07."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_07", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_27(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 27 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_27"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_08(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 08."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_08", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_28(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 28 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_28"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_09(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 09."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_09", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_29(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 29 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_29"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_10(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 10."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_10", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_30(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 30 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_30"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_11(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 11."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_11", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_31(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 31 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_31"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def group_12(self, rows: Iterable[Mapping[str, Any]], key: str) -> dict[str, Any]:
+        """Group rows for report section 12."""
+        groups: dict[str, int] = {}
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            value = str(row.get(key, "unknown"))
+            groups[value] = groups.get(value, 0) + 1
+        ordered = dict(sorted(groups.items(), key=lambda item: (-item[1], item[0])))
+        return self._section("group_12", {"key": key, "groups": ordered, "count": sum(ordered.values())})
 
-def reporting_operation_32(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 32 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_32"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_01(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 01."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_01", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_33(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 33 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_33"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_02(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 02."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_02", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_34(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 34 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_34"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_03(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 03."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_03", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_35(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 35 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_35"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_04(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 04."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_04", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_36(items: Iterable[Mapping[str, Any]], *, threshold: float = 1, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 36 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_36"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_05(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 05."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_05", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_37(items: Iterable[Mapping[str, Any]], *, threshold: float = 2, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 37 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_37"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_06(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 06."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_06", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_38(items: Iterable[Mapping[str, Any]], *, threshold: float = 3, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 38 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_38"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_07(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 07."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_07", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_39(items: Iterable[Mapping[str, Any]], *, threshold: float = 4, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 39 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_39"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def trend_08(self, values: Iterable[Any]) -> dict[str, Any]:
+        """Describe directional movement for series 08."""
+        nums = self._numbers(values)
+        if len(nums) < 2:
+            direction = "flat"
+            change = 0.0
+        else:
+            change = nums[-1] - nums[0]
+            direction = "up" if change > 0 else "down" if change < 0 else "flat"
+        return self._section("trend_08", {
+            "points": len(nums), "direction": direction, "change": change,
+            "first": nums[0] if nums else 0.0, "last": nums[-1] if nums else 0.0,
+        })
 
-def reporting_operation_40(items: Iterable[Mapping[str, Any]], *, threshold: float = 5, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 40 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_40"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
+    def dashboard_snapshot(self, rows: Iterable[Mapping[str, Any]], value_key: str = "value") -> dict[str, Any]:
+        """Create a compact dashboard snapshot from row mappings."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping):
+                values.append(row.get(value_key))
+        return {"generated_at": datetime.now(timezone.utc).isoformat(),
+                "value_key": value_key, "summary": self.metric_01(values)}
 
-def reporting_operation_41(items: Iterable[Mapping[str, Any]], *, threshold: float = 6, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 41 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_41"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
-
-def reporting_operation_42(items: Iterable[Mapping[str, Any]], *, threshold: float = 7, context: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Apply operation 42 with stable filtering and enrichment."""
-    context = dict(context or {})
-    result: list[dict[str, Any]] = []
-    for raw in items:
-        item = dict(raw)
-        score = float(item.get("score", 0) or 0)
-        item["accepted"] = score >= threshold
-        item["operation_42"] = {"threshold": threshold, "context": bool(context)}
-        result.append(item)
-    return result
-
-def summarize(items: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
-    """Summarize a collection for dashboards and diagnostics."""
-    rows = list(items)
-    scores = [float(row.get("score", 0) or 0) for row in rows]
-    return {"count": len(rows), "mean": statistics.fmean(scores) if scores else 0.0, "maximum": max(scores, default=0.0), "minimum": min(scores, default=0.0)}
-
+    def compare_series(self, left: Iterable[Any], right: Iterable[Any]) -> dict[str, Any]:
+        """Compare two numeric series without requiring equal lengths."""
+        a, b = self._numbers(left), self._numbers(right)
+        total_a, total_b = sum(a), sum(b)
+        return {"left_count": len(a), "right_count": len(b), "left_total": total_a,
+                "right_total": total_b, "difference": total_a - total_b,
+                "ratio": (total_a / total_b if total_b else None)}
