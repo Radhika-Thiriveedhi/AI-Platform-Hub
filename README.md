@@ -53,3 +53,6 @@ ai_platform_hub/
 - And many more sub-pages
 
 Created for educational / assignment purposes.
+## Continuous Integration
+
+GitHub Actions installs the pinned Python dependencies and runs the pytest suite with XML coverage on every push and pull request. The workflow uses Python 3.11 for a stable Flask/pytest runtime.
