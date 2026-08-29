@@ -8,7 +8,7 @@ if str(ROOT) not in sys.path:
 
 from app import create_app
 from services.analytics_service import AnalyticsService
-from services.validation_service import ValidationService
+from services.validation_service import ValidationService, build_key, coerce_bool
 
 
 def make_client():
@@ -69,6 +69,9 @@ def test_validation_service_helpers():
     from services.validation_service import normalize_name, paginate, validate_limit
     assert normalize_name("  Hello   World ") == "hello world"
     assert validate_limit(5, 10) == 5
+    assert build_key("  Alice ", " Smith ") == "alice:smith"
+    assert coerce_bool("true") is True
+    assert coerce_bool("no") is False
     page, meta = paginate(list(range(5)), 2, 2)
     assert page == [2, 3]
     assert meta["pages"] == 3
