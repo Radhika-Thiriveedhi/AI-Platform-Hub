@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 import secrets
-from flask import Flask
+from flask import Flask, g, request
 from app.routes import register_blueprints
 
 
@@ -34,11 +34,18 @@ def create_app(test_config: dict | None = None) -> Flask:
 
     register_blueprints(app)
 
+    @app.before_request
+    def assign_request_id():
+        """Attach a stable request identifier for logs and client support."""
+        supplied_id = request.headers.get("X-Request-ID", "").strip()
+        g.request_id = supplied_id[:128] if supplied_id else secrets.token_hex(12)
+
     @app.after_request
     def add_security_headers(response):
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers["X-Request-ID"] = g.request_id
         return response
 
     @app.context_processor
