@@ -3,6 +3,8 @@ Central route registration for AI Platform Hub.
 All blueprints are imported and registered here.
 """
 
+import re
+
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from modules.models_catalog import get_all_models, get_model_by_id, search_models, get_categories
 from modules.chat_engine import process_chat_message, get_chat_history, clear_chat_history
@@ -15,6 +17,9 @@ from modules.docs import get_docs_sections, get_doc_page
 from modules.team import get_team_members
 from utils.helpers import format_number, truncate_text, generate_slug
 from data.mock_data import FEATURES_LIST, TESTIMONIALS, FAQ_ITEMS
+
+
+EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 def register_blueprints(app):
@@ -66,10 +71,10 @@ def contact():
         email = request.form.get("email", "").strip()
         subject = request.form.get("subject", "").strip()
         body = request.form.get("message", "").strip()
-        if name and email and body:
+        if name and email and body and EMAIL_PATTERN.fullmatch(email):
             message = f"Thank you {name}! Your message has been received. We will respond to {email} shortly."
         else:
-            message = "Please fill in all required fields."
+            message = "Please provide a name, a valid email address, and a message."
     return render_template("contact.html", message=message)
 
 
