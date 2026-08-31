@@ -314,8 +314,15 @@ api_bp = Blueprint("api", __name__)
 
 @api_bp.route("/models")
 def api_models():
-    """JSON API for models list."""
-    return jsonify(get_all_models())
+    """JSON API for models list, optionally filtered by category or query."""
+    category = request.args.get("category", "all")
+    query = request.args.get("q", "").strip()
+
+    models = search_models(query) if query else get_all_models()
+    if category != "all":
+        models = [model for model in models if model.get("category") == category]
+
+    return jsonify(models)
 
 
 @api_bp.route("/models/<model_id>")
