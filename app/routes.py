@@ -325,13 +325,25 @@ def api_model_detail(model_id):
 @api_bp.route("/stats")
 def api_stats():
     """JSON API for dashboard stats."""
-    return jsonify(get_dashboard_stats())
+    payload = get_dashboard_stats()
+    return jsonify({
+        "status": "ok",
+        "service": "AI Platform Hub",
+        "version": "1.1.0",
+        "data": payload,
+    })
 
 
 @api_bp.route("/health")
 def api_health():
     """Health check endpoint."""
-    return jsonify({"status": "ok", "service": "AI Platform Hub"})
+    return jsonify({
+        "status": "ok",
+        "service": "AI Platform Hub",
+        "version": "1.1.0",
+        "environment": "development" if not request.is_secure else "production",
+        "checks": {"database": "mocked", "routes": "registered"},
+    })
 
 
 # ==================== MISC PAGES BLUEPRINT ====================

@@ -143,6 +143,21 @@ def build_key(*values: Any) -> str:
     parts = [normalize_name(part) for part in values if not is_blank(part)]
     return ":".join(parts)
 
+
+def coerce_bool(value: Any, default: bool = False) -> bool:
+    """Service helper: coerce a value into a boolean."""
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return default
+    text = str(value).strip().casefold()
+    if text in {"1", "true", "yes", "y", "on"}:
+        return True
+    if text in {"0", "false", "no", "n", "off"}:
+        return False
+    return default
+
+
 def merge_metadata(base: Mapping[str, Any] | None, extra: Mapping[str, Any] | None) -> dict[str, Any]:
     """Service helper: merge metadata."""
     result = dict(base or {})
