@@ -23,11 +23,19 @@ def create_app(test_config: dict | None = None) -> Flask:
         static_folder="../static",
         static_url_path="/static",
     )
+
+    is_debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    max_upload = int(os.getenv("MAX_CONTENT_LENGTH", str(2 * 1024 * 1024)))
+
     app.config.update(
         SECRET_KEY=_secret_key(),
         TEMPLATES_AUTO_RELOAD=os.getenv("TEMPLATES_AUTO_RELOAD", "false").lower() == "true",
         SEND_FILE_MAX_AGE_DEFAULT=int(os.getenv("SEND_FILE_MAX_AGE", "0")),
-        MAX_CONTENT_LENGTH=int(os.getenv("MAX_CONTENT_LENGTH", str(2 * 1024 * 1024))),
+        MAX_CONTENT_LENGTH=max_upload,
+        JSON_SORT_KEYS=False,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        DEBUG=is_debug,
     )
     if test_config:
         app.config.update(test_config)
@@ -39,6 +47,8 @@ def create_app(test_config: dict | None = None) -> Flask:
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault("X-XSS-Protection", "1; mode=block")
+        response.headers.setdefault("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'")
         return response
 
     @app.context_processor
