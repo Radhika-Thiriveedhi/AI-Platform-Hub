@@ -617,3 +617,1003 @@ class ReportingService:
         return {"left_count": len(a), "right_count": len(b), "left_total": total_a,
                 "right_total": total_b, "difference": total_a - total_b,
                 "ratio": (total_a / total_b if total_b else None)}
+
+    def indicator_01(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 01 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_01", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_02(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 02 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_02", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_03(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 03 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_03", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_04(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 04 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_04", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_05(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 05 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_05", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_06(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 06 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_06", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_07(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 07 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_07", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_08(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 08 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_08", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_09(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 09 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_09", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_10(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 10 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_10", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_11(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 11 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_11", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_12(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 12 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_12", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_13(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 13 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_13", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_14(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 14 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_14", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_15(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 15 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_15", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_16(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 16 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_16", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_17(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 17 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_17", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_18(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 18 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_18", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_19(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 19 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_19", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_20(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 20 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_20", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_21(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 21 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_21", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_22(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 22 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_22", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_23(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 23 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_23", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_24(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 24 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_24", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_25(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 25 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_25", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_26(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 26 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_26", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_27(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 27 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_27", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_28(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 28 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_28", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_29(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 29 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_29", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_30(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 30 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_30", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_31(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 31 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_31", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_32(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 32 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_32", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_33(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 33 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_33", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_34(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 34 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_34", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_35(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 35 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_35", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_36(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 36 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_36", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_37(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 37 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_37", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_38(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 38 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_38", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_39(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 39 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_39", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
+
+    def indicator_40(self, rows: Iterable[Mapping[str, Any]], key: str = "value") -> dict[str, Any]:
+        """Build operational indicator 40 for dashboard consumers."""
+        values = []
+        for row in rows:
+            if isinstance(row, Mapping) and key in row:
+                value = row[key]
+                if isinstance(value, (int, float)) and math.isfinite(float(value)):
+                    values.append(float(value))
+        count = len(values)
+        total = sum(values)
+        mean = total / count if count else 0.0
+        positive = sum(1 for value in values if value > 0)
+        negative = sum(1 for value in values if value < 0)
+        zero = count - positive - negative
+        return self._section("indicator_40", {
+            "key": key,
+            "count": count,
+            "total": total,
+            "mean": mean,
+            "positive": positive,
+            "negative": negative,
+            "zero": zero,
+            "positive_rate": positive / count if count else 0.0,
+        })
